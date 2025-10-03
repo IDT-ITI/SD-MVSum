@@ -63,7 +63,7 @@ JSON files define train, validation, test splits for the respective datasets.
 
 ### 3. Text Annotations
 
-This folder contains all textual data used in the datasets, including generated scripts and timestamped audio transcripts. The texts were created using LLaVA-NeXT-Video-7B for script generation and Silero + Whisper for transcript extraction.
+This folder, available on Zenodo, contains all textual data used in the datasets, including generated scripts and timestamped audio transcripts. The scripts were generated using LLaVA-NeXT-Video-7B, and transcripts were extracted using Silero and Whisper.
 
 #### 3.1 `Scripts/`
   Contains the generated scripts for MRHiSUM videos, produced by LLaVA-NeXT-Video-7B.
