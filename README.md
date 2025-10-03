@@ -83,7 +83,8 @@ This repository implements SD-MVSum, a method for script-driven video summarizat
 
 Clone the repository
    ```
-  
+  git clone https://github.com/IDT-ITI/SD-MVSum.git
+  cd SD-MVSum
    ```
 Create and activate the Conda environment
    ```
