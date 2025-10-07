@@ -27,30 +27,30 @@ The core HDF5 file for the S-MrHiSum dataset. Each top-level group corresponds t
  
 | Key                   | Description                                                                                                 | Shape / Type                       |
 |-----------------------|-------------------------------------------------------------------------------------------------------------|------------------------------------|
-| `n_frames`            | Number of video frames.                                                                                     | Scalar integer                          |
-| `change_points`       | Indices of start and end frame of each video shot.                                                          | `[num_shots, 2]`                        |
-| `gt_summary`          | Binary ground-truth summary derived from gtscores using the Knapsack algorithm with a 15% time budget.      | `[num_sampled_frames]` (binary vector)  |
-| `video_embeddings`    | Frame-level CLIP embeddings for the sub-sampled video frames (at 1 fps).                                    | `[num_sampled_frames, 512]`             |
-| `text_embeddings`     | Sentence-level CLIP embeddings for textual description of the video summary (script).                       | `[M, 512]` (M = number of sentences)         |
-| `transcript_embeddings` | Chunk-level CLIP embeddings for the extracted audio transcript.                                           | `[N, 512]` (N = number of chunks)            |
-| `transcript_timestamps` | Start and end time for each transcript chunk.                                                             | `[N, 2]` (N = number of chunks)              |
-| `aligned_transcripts` | Transcript embeddings that are time-aligned with the frame-level embeddings; zero-padding when transcripts are not available (there is no spoken content in the video).   | `[num_downsampled_frames, 512]`         |
+| `n_frames`            | Number of video frames                                                                                      | Scalar integer                          |
+| `change_points`       | Indices of start and end frame of each video shot                                                           | `[num_shots, 2]`                        |
+| `gt_summary`          | Binary ground-truth summary derived from gtscores using the Knapsack algorithm with a 15% time budget       | `[num_sampled_frames]` (binary vector)  |
+| `video_embeddings`    | Frame-level CLIP embeddings for the sub-sampled video frames (at 1 fps)                                     | `[num_sampled_frames, 512]`             |
+| `text_embeddings`     | Sentence-level CLIP embeddings for the textual description of the ground-truth video summary (script)       | `[M, 512]` (M = number of sentences)         |
+| `transcript_embeddings` | Chunk-level CLIP embeddings for the extracted audio transcript                                            | `[N, 512]` (N = number of chunks)            |
+| `transcript_timestamps` | Start and end time for each chunk of the audio transcript                                                 | `[N, 2]` (N = number of chunks)              |
+| `aligned_transcripts` | Transcript embeddings that are time-aligned with the frame-level embeddings; zero-padding when transcripts are not available (there is no spoken content in the video)   | `[num_downsampled_frames, 512]`         |
 
 
 
 
 ### 1.2 `script_videoxum.h5`
-The core HDF5 file for the S-VideoXum dataset. Each top-level group corresponds to one video, named by its video_name. Inside each video group:
+The core HDF5 file for the S-VideoXum dataset. Each top-level group corresponds to a different video of the dataset and has been named by the video's name. Each of these groups contains the following information:
 
 | Key                    | Description                                                                                                         | Shape / Type                        |
 |------------------------|---------------------------------------------------------------------------------------------------------------------|-------------------------------------|
-| `n_frames`             | Number of downsampled frames in the video.                                                                          | Scalar integer                       |
-| `gtscores`             | Ground‐truth scores from the 10 human annotators.                                                                   | `[10, n_frames]`                    |
-| `video_embeddings`     | CLIP feature matrix for each frame.                                                                                 | `[n_frames, 512]`                   |
-| `text_embeddings`      | CLIP feature tensor for the 10 scripts (one per annotator). Zero-padded if shorter than `M_max`.                     | `[10, M_max, 512]`                   |
-| `transcript_embeddings`| CLIP embeddings for chunks of the audio transcript.                                                                 | `[N, 512]` (N = number of transcript chunks)    |
-| `transcript_timestamps`| Start and end times for each transcript chunk, aligned with transcript_embeddings.                                   | `[N, 2]`                            |
-| `aligned_transcripts`  | Transcript embeddings aligned to the sampled video frames (video_embeddings), zero-padded where no transcript exists. | `[n_frames, 512]`                   |
+| `n_frames`             | Number of sub-sampled frames in the video (at 1 fps)                                                                          | Scalar integer                       |
+| `gtscores`             | Ground‐truth frame-level importance scores from 10 human annotators                                                                   | `[10, n_frames]`                    |
+| `video_embeddings`     | Frame-level CLIP embeddings for the sub-sampled video frames                                                                                 | `[n_frames, 512]`                   |
+| `text_embeddings`      | Sentence-level CLIP embeddings for the textual description of each of the 10 available ground-truth video summaries (scripts); zero padding if a description has less than `M_max`sentences                     | `[10, M_max, 512]`                   |
+| `transcript_embeddings`| Chunk-level CLIP embeddings for the extracted audio transcript                                                                 | `[N, 512]` (N = number of transcript chunks)    |
+| `transcript_timestamps`| Start and end time for each chunk of the audio transcript                                   | `[N, 2]`                            |
+| `aligned_transcripts`  | Transcript embeddings that are time-aligned with the frame-level embeddings; zero-padding when transcripts are not available (there is no spoken content in the video) | `[n_frames, 512]`                   |
 
 
 ### 2. JSON Split Files 
