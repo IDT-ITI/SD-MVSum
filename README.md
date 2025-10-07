@@ -23,18 +23,18 @@ dataset/SS
 
 ---
 ### 1.1 `script_mrhisum.h5`
-The core HDF5 file for the S-MrHiSum dataset. Each top-level group corresponds to one video, named by its video_name. Inside each video group:
+The core HDF5 file for the S-MrHiSum dataset. Each top-level group corresponds to a different video of the dataset and has been named by the video's name. Each of these groups contains the following information:
  
-| Key                   | Description                                                                                                      | Shape / Type                                |
-|-----------------------|------------------------------------------------------------------------------------------------------------------|---------------------------------------------|
-| `n_frames`            | Number of frames in the original video.                                                                          | Scalar integer                              |
-| `change_points`       | Shot boundaries, start–end frame indices.                                                                        | `[num_shots, 2]`                            |
-| `gt_summary`          | Binary ground-truth summary derived from gtscores using the knapsack algorithm with a 15% budget.                 | `[n_downsampled_frames]` (binary vector)    |
-| `video_embeddings`    | Frame-level CLIP embeddings for sampled frames at 1 fps.                                                         | `[num_downsampled_frames, 512]`             |
-| `text_embeddings`     | CLIP feature tensor for the scripts.                                                                             | `[M, 512]` (M = number of sentences)        |
-| `transcript_embeddings` | CLIP embeddings for chunks of the audio transcript.                                                            | `[N, 512]` (N = number of transcript chunks) |
-| `transcript_timestamps` | Start and end times for each transcript chunk, aligned with transcript_embeddings.                             | `[N, 2]`                                    |
-| `aligned_transcripts` | Transcript embeddings aligned to the sampled video frames, with zero-padding where no transcript is available.   | `[num_downsampled_frames, 512]`             |
+| Key                   | Description                                                                                                 | Shape / Type                       |
+|-----------------------|-------------------------------------------------------------------------------------------------------------|------------------------------------|
+| `n_frames`            | Number of video frames.                                                                                     | Scalar integer                          |
+| `change_points`       | Indices of start and end frame of each video shot.                                                          | `[num_shots, 2]`                        |
+| `gt_summary`          | Binary ground-truth summary derived from gtscores using the Knapsack algorithm with a 15% time budget.      | `[num_sampled_frames]` (binary vector)  |
+| `video_embeddings`    | Frame-level CLIP embeddings for the sub-sampled video frames (at 1 fps).                                    | `[num_sampled_frames, 512]`             |
+| `text_embeddings`     | Sentence-level CLIP embeddings for textual description of the video summary (script).                       | `[M, 512]` (M = number of sentences)         |
+| `transcript_embeddings` | Chunk-level CLIP embeddings for the extracted audio transcript.                                           | `[N, 512]` (N = number of chunks)            |
+| `transcript_timestamps` | Start and end time for each transcript chunk.                                                             | `[N, 2]` (N = number of chunks)              |
+| `aligned_transcripts` | Transcript embeddings that are time-aligned with the frame-level embeddings; zero-padding when transcripts are not available (there is no spoken content in the video).   | `[num_downsampled_frames, 512]`         |
 
 
 
