@@ -54,7 +54,7 @@ The core HDF5 file for the S-VideoXum dataset. Each top-level group corresponds 
 
 
 ### 2. JSON Split Files 
-JSON files define train, validation, test splits for the respective datasets.
+JSON files with the video names in the train, validation, and test set of each dataset.
 
        `script_mrhisum_split.json`
        `script_videoxum_split.json`
