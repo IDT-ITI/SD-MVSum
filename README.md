@@ -60,7 +60,7 @@ JSON files with the video names in the train, validation, and test set of each d
 
 ### 3. Text Annotations
 
-The generated text annotations, i.e., the textual descriptions of the ground-truth video summaries (a.k.a. scripts) and the time-stamped audio transcripts of the full-length videos, are publicly available on [Zenodo](zenodo.link).
+The generated text annotations, i.e., the textual descriptions of the ground-truth video summaries (a.k.a. scripts) and the time-stamped audio transcripts of the full-length videos, are publicly available on [Zenodo](https://zenodo.org/records/17294445).
 
 #### 3.1 `Scripts/`
   Contains the generated scripts for the ground-truth summaries of the MrHiSum videos.
@@ -91,7 +91,7 @@ Create and activate the Conda environment
 ### Dataset preparation
 
 Download the datasets
-   - Download the .h5 files and the split.json files from [Zenodo](zenodo.link).
+   - Download the .h5 files and the split.json files from [Zenodo](https://zenodo.org/records/17294445).
    - Place both files under the ```dataset``` directory as shown below.
       ```
       SD-MVSum
@@ -111,7 +111,7 @@ python main.py --exp_num='exp2' --epochs=50 --batch_size=4 --train=True --datase
 After each training epoch, the trained model is evaluated on the samples of the validation set. When training is completed, the best-performing model on the validation set is selected and evaluated on the test set. Moreover, its checkpoint is saved as a .pkl file (see the generated folder "best_f1score_model").
 
 #### Inference using pretrained models
-Download the pretrained SD-MVSum models (.pkl files) on S-MrHiSum and S-VideoXum from [Zenodo](zenodo.link).
+Download the pretrained SD-MVSum models (.pkl files) on S-MrHiSum and S-VideoXum from [Zenodo](https://zenodo.org/records/17294445).
 To run them at inference mode on the S-MrHiSum and S-VideoXum datasets, please run the following commmands:
 
 ```
