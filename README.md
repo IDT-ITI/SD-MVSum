@@ -127,7 +127,7 @@ The S-MrHiSum and S-VideoXum datasets, as well as the SD-MVSum method for script
 @misc{sdmvsum2026,
       title={"SD-MVSum: Script-Driven Multimodal Video Summarization Method and Datasets"}, 
       author={Manolis Mylonas and Charalampia Zerva and Evlampios Apostolidis and Vasileios Mezaris},
-      year={2025},
+      year={2026},
       note={under review}
 }
 ```
