@@ -5,9 +5,9 @@ This repository provides the official implementation of the SD-MVSum method from
 
 The original [MrHiSum](https://proceedings.neurips.cc/paper_files/paper/2023/file/7f880e3a325b06e3601af1384a653038-Paper-Datasets_and_Benchmarks.pdf) dataset (Sul et al., 2024) was constructed from a curated subset of YouTube-8M videos, where highlight annotations were derived from YouTube’s “Most Replayed” statistics. These video replay statistics, aggregated from at least 50 independent viewers per video, serve as a reliable indicator of audience engagement. Each video was annotated at the frame level with importance scores, representing highlight intensity. Ground-truth video summaries were generated based on a predefined temporal segmentation of the videos and by solving the Knapsack problem for a given time-budget about the summary duration, ensuring that the obtained summaries are concise while covering key highlights. In total, the dataset contains 31,892 videos and the associated ground-truth annotations, supporting the training and evaluation of methods for video highlight detection and summarization.
 
-To make MrHiSum suitable for script-driven multimodal video summarization, we extended it by producing textual descriptions of the human-annotated summaries and extracting audio transcripts, forming the SM-MrHiSum dataset. For this, the visual content of each ground-truth video summary (sampled at 1 fps) was described by Qwen3-VL-8B-Instruct which was prompted to "describe the scenery and the main persons and activities shown in the video". Audio transcripts were extracted through a two-step pipeline: the speech was isolated from background noise using a pretrained model of Silero for voice activity detection, and then speech-to-text was performed using a pretrained model of Whisper, which outputs a series of timestamped transcripts. The created SM-MrHiSum dataset contains 29,918 videos, where each video is associated with: a) ground-truth summary, b) a textual description of this summary (the so-called script), and c) a set of timestamped audio transcripts.
+To make MrHiSum suitable for script-driven multimodal video summarization, we extended it by producing textual descriptions of the human-annotated summaries and extracting audio transcripts, forming the SM-MrHiSum dataset. For this, the visual content of each ground-truth video summary (sampled at 1 fps) was described by Qwen3-VL-8B-Instruct which was prompted to "describe the scenery and the main persons and activities shown in the video". Audio transcripts were extracted through a two-step pipeline: the speech was isolated from background noise using a pretrained model of Silero for voice activity detection, and then speech-to-text was performed using a pretrained model of Whisper, which outputs a series of time-stamped transcripts. The created SM-MrHiSum dataset contains 29,918 videos, where each video is associated with: a) ground-truth summary, b) a textual description of this summary (the so-called script), and c) a set of time-stamped audio transcripts.
 
-The [S-VideoXum](https://zenodo.org/records/15349075) dataset was presented in [Mylonas et. al, 2025](https://arxiv.org/html/2505.03319v2) as an extension of the [VideoXum](https://videoxum.github.io/) dataset for cross-modal video summarization, that is suitable for training and evaluation of methods for script-driven video summarization. For this, the multiple ground-truth summaries that are available per video of VideoXum, were associated with textual descriptions of their visual content, generated using LLaVA-NeXT-Video-7B. We further extended the S-VideoXum dataset by extracting timestamped audio transcripts from each full-length video, following the approach described above for the videos of the SM-MrHiSum dataset, forming the SM-VideoXum dataset that is suitable for training and evaluation of methods for script-driven multimodal video summarization.
+The [S-VideoXum](https://zenodo.org/records/15349075) dataset was presented in [Mylonas et. al, 2025](https://arxiv.org/html/2505.03319v2) as an extension of the [VideoXum](https://videoxum.github.io/) dataset for cross-modal video summarization, that is suitable for training and evaluation of methods for script-driven video summarization. For this, the multiple ground-truth summaries that are available per video of VideoXum, were associated with textual descriptions of their visual content, generated using LLaVA-NeXT-Video-7B. We further extended the S-VideoXum dataset by extracting time-stamped audio transcripts from each full-length video, following the approach described above for the videos of the SM-MrHiSum dataset, forming the SM-VideoXum dataset that is suitable for training and evaluation of methods for script-driven multimodal video summarization.
 
 In our implementations and experiments, all the visual, textual, and transcript data of the SM-MrHiSum and SM-VideoXum datasets have been represented using CLIP-based embeddings. In particular, for the data of the SM-MrHiSum dataset we employed the CLIP ViT-B/32 model (Radford at. al, 2021) from [HuggingFace](https://huggingface.co/sentence-transformers/clip-ViT-B-32), while for the data of the SM-VideoXum dataset we utilized a fine-tuned CLIP model on the data of VideoXum, that was released by the authors of [VideoXum](https://videoxum.github.io/).
 
@@ -74,7 +74,7 @@ The generated text annotations, i.e., the textual descriptions of the ground-tru
 
 ## B. SD-MVSum method and models
 
-This section provides details about the training and evaluation of the developed SD-MVSum method, and access to pretrained models of SD-MVSum on the S-MrHiSum and S-VideoXum datasets.
+This section provides details about the training and evaluation of the developed SD-MVSum method, and access to pretrained models of SD-MVSum on the SM-MrHiSum and SM-VideoXum datasets.
 
 ### Installation
 
@@ -111,12 +111,12 @@ python main.py --exp_num='exp2' --epochs=50 --batch_size=4 --train=True --datase
 After each training epoch, the trained model is evaluated on the samples of the validation set. When training is completed, the best-performing model on the validation set is selected and evaluated on the test set. Moreover, its checkpoint is saved as a .pkl file (see the generated folder "best_f1score_model").
 
 #### Inference using pretrained models
-Download the pretrained SD-MVSum models (.pkl files) on S-MrHiSum and S-VideoXum from [Zenodo](https://zenodo.org/records/17294445).
-To run them at inference mode on the S-MrHiSum and S-VideoXum datasets, please run the following commmands:
+Download the pretrained SD-MVSum models (.pkl files) on SM-MrHiSum and SM-VideoXum from [Zenodo](https://zenodo.org/records/17294445).
+To run them at inference mode on the SM-MrHiSum and SM-VideoXum datasets, please run the following commmands:
 
 ```
-python main.py --exp_num='exp1' --ckpt_path='path/to/pkl/file' --train=False --dataset='S_MrHisum'
-python main.py --exp_num='exp2' --ckpt_path='path/to/pkl/file' --train=False --dataset='S_VideoXum'
+python main.py --exp_num='exp1' --ckpt_path='path/to/pkl/file' --train=False --dataset='SM_MrHisum'
+python main.py --exp_num='exp2' --ckpt_path='path/to/pkl/file' --train=False --dataset='SM_VideoXum'
 ```
 After the completion of the inference stage, the performance of these models is shown on the terminal.
 
