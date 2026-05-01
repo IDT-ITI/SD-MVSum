@@ -11,18 +11,24 @@ The [S-VideoXum](https://zenodo.org/records/15349075) dataset was presented in [
 
 In our implementations and experiments, all the visual, textual, and transcript data of the SM-MrHiSum and SM-VideoXum datasets have been represented using CLIP-based embeddings. In particular, for the data of the SM-MrHiSum dataset we employed the CLIP ViT-B/32 model (Radford at. al, 2021) from [HuggingFace](https://huggingface.co/sentence-transformers/clip-ViT-B-32), while for the data of the SM-VideoXum dataset we utilized a fine-tuned CLIP model on the data of VideoXum, that was released by the authors of [VideoXum](https://videoxum.github.io/).
 
-### Folder Structure of the Dataset
+### Folder Structure for each Dataset
 
 ```
-dataset/
-├── script_videoxum.h5
-├── script_videoxum_split.json
-├── script_mrhisum.h5
-├── script_mrhisum_split.json
+<dataset_name>/   with <dataset_name> = [sm_mrhisum | sm_videoxum]
+├── dataset/
+├──── <dataset_name>.h5
+├──── <dataset_name>_split.json
+├── model/
+├──── layers/
+├──── utils/
+├──── configs.py
+├──── data_loader.py
+├──── solver.py
+├── main.py
 ```
 
 ---
-### 1.1 `script_mrhisum.h5`
+### 1.1 `sm_mrhisum.h5`
 The core HDF5 file for the S-MrHiSum dataset. Each top-level group corresponds to a different video of the dataset and has been named by the video's name. Each of these groups contains the following information:
  
 | Key                   | Description                                                                                                 | Shape / Type                       |
@@ -31,7 +37,7 @@ The core HDF5 file for the S-MrHiSum dataset. Each top-level group corresponds t
 | `change_points`       | Indices of start and end frame of each video shot                                                           | `[num_shots, 2]`                        |
 | `gt_summary`          | Binary ground-truth summary derived from gtscores using the Knapsack algorithm with a 15% time budget       | `[n_frames]` (binary vector)  |
 | `video_embeddings`    | Frame-level CLIP embeddings for the sub-sampled video frames (at 1 fps)                                     | `[n_frames, 512]`             |
-| `text_embeddings`     | Sentence-level CLIP embeddings for the textual description of the ground-truth video summary (script)       | `[M, 512]` (M = number of sentences)         |
+| `qwen_text_embeddings`  | Sentence-level CLIP embeddings for the textual description of the ground-truth video summary (script)       | `[M, 512]` (M = number of sentences)         |
 | `transcript_embeddings` | Chunk-level CLIP embeddings for the extracted audio transcript                                            | `[N, 512]` (N = number of chunks)            |
 | `transcript_timestamps` | Start and end time for each chunk of the audio transcript                                                 | `[N, 2]` (N = number of chunks)              |
 | `aligned_transcripts` | Transcript embeddings that are time-aligned with the frame-level embeddings; zero-padding when transcripts are not available (there is no spoken content in the video)   | `[n_frames, 512]`         |
@@ -45,36 +51,49 @@ The core HDF5 file for the S-VideoXum dataset. Each top-level group corresponds 
 | `n_frames`             | Number of frames in the video                                                                          | Scalar integer                       |
 | `gtscores`             | Ground‐truth frame-level importance scores from 10 human annotators                                    | `[10, n_sampled_frames]`                    |
 | `video_embeddings`     | Frame-level CLIP embeddings for the sub-sampled video frames (at 1 fps)                                | `[n_sampled_frames, 512]`                   |
-| `text_embeddings`      | Sentence-level CLIP embeddings for the textual description of each of the 10 available ground-truth video summaries (scripts); zero padding if a description has less than `M_max`sentences                     | `[10, M_max, 512]`                   |
+| `qwen2_embeddings`     | Sentence-level CLIP embeddings for the textual description of each of the 10 available ground-truth video summaries (scripts); zero padding if a description has less than `M_max`sentences                     | `[10, M_max, 512]`                   |
 | `transcript_embeddings`| Chunk-level CLIP embeddings for the extracted audio transcript                                         | `[N, 512]` (N = number of transcript chunks)    |
 | `transcript_timestamps`| Start and end time for each chunk of the audio transcript                                   | `[N, 2]`                            |
 | `aligned_transcripts`  | Transcript embeddings that are time-aligned with the frame-level embeddings; zero-padding when transcripts are not available (there is no spoken content in the video) | `[n_sampled_frames, 512]`                   |
 
-
 ### 2. JSON Split Files 
 JSON files with the video names in the train, validation, and test set of each dataset.
 
-       `script_mrhisum_split.json`
-       `script_videoxum_split.json`
+       `sm_mrhisum_split.json`
+       `sm_videoxum_split.json`
     
-
 ### 3. Text Annotations
 
-The generated text annotations, i.e., the textual descriptions of the ground-truth video summaries (a.k.a. scripts) and the time-stamped audio transcripts of the full-length videos, are publicly available on [Zenodo](https://zenodo.org/records/17294445).
+The generated text annotations, i.e., the textual descriptions of the ground-truth video summaries (the so-called scripts) and the time-stamped audio transcripts of the full-length videos, are publicly available on [Zenodo](https://zenodo.org/records/17294445).
 
 #### 3.1 `Scripts/`
-  Contains the generated scripts for the ground-truth summaries of the MrHiSum videos.
+  Contains the generated scripts for the ground-truth summaries of the MrHiSum and VideoXum videos, organized into the following subfolders:.
+
+      `SM-MrHiSum/` — scripts for the ground-truth summaries of the MrHiSum videos
+      `SM-VideoXum/` — scripts for the ground-truth summaries of the VideoXum videos
 
 #### 3.2 `Transcripts/`
-  Contains the extracted timestamped audio transcripts for the full-length videos of both datasets, organized into the following subfolders:
+  Contains the extracted time-stamped audio transcripts for the full-length videos of both datasets, organized into the following subfolders:
     
-      `S-MrHiSum/` — audio transcripts for MrHiSum videos
-        
-      `S-VideoXum/` — audio transcripts for S-VideoXum videos
+      `SM-MrHiSum/` — audio transcripts for the MrHiSum videos
+      `SM-VideoXum/` — audio transcripts for the VideoXum videos
 
 ## B. SD-MVSum method and models
 
 This section provides details about the training and evaluation of the developed SD-MVSum method, and access to pretrained models of SD-MVSum on the SM-MrHiSum and SM-VideoXum datasets.
+
+The files for implementing SD-MVSum and preparing it for training and evaluation on each dataset are shown below: 
+
+```
+<dataset_name>/   with <dataset_name> = [sm_mrhisum | sm_videoxum]
+├── model/
+├──── layers/
+├──── utils/
+├──── configs.py
+├──── data_loader.py
+├──── solver.py
+├── main.py
+```
 
 ### Installation
 
@@ -92,21 +111,24 @@ Create and activate the Conda environment
 
 Download the datasets
    - Download the .h5 files and the split.json files from [Zenodo](https://zenodo.org/records/17294445).
-   - Place both files under the ```dataset``` directory as shown below.
+   - Place each files under the ```dataset``` directories as shown below.
       ```
       SD-MVSum
-       └── dataset/
-            ├── script_mrhisum.h5
-            ├── script_mrhisum_split.json
-            ├── script_videoxum.h5
-            └── script_videoxum_split.json
+      └── sm-mrhisum/
+          └── dataset/
+              ├── sm_mrhisum.h5
+              └── sm_mrhisum_split.json
+      └── sm-videoxum/
+          └── dataset/
+              ├── sm_videoxum.h5
+              └── sm_videoxum_split.json
       ``` 
 
 #### Training on S-VideoXum and S-MrHiSum
-To train a model on the S-MrHiSum and S-VideoXum datasets, please run the following commands:
+To train a model on the SM-MrHiSum and SM-VideoXum datasets, please use the relevant 'main.py' script and run the following command:
 ```
-python main.py --exp_num='exp1' --epochs=50 --batch_size=64 --train=True --dataset='S_MrHisum'
-python main.py --exp_num='exp2' --epochs=50 --batch_size=4 --train=True --dataset='S_VideoXum'
+python main.py --exp_num='exp1' --epochs=50 --batch_size=64 --train=True --dataset='SM_MrHisum'
+python main.py --exp_num='exp1' --epochs=50 --batch_size=4 --train=True --dataset='SM_VideoXum'
 ```
 After each training epoch, the trained model is evaluated on the samples of the validation set. When training is completed, the best-performing model on the validation set is selected and evaluated on the test set. Moreover, its checkpoint is saved as a .pkl file (see the generated folder "best_f1score_model").
 
@@ -115,14 +137,14 @@ Download the pretrained SD-MVSum models (.pkl files) on SM-MrHiSum and SM-VideoX
 To run them at inference mode on the SM-MrHiSum and SM-VideoXum datasets, please run the following commmands:
 
 ```
-python main.py --exp_num='exp1' --ckpt_path='path/to/pkl/file' --train=False --dataset='SM_MrHisum'
+python main.py --exp_num='exp2' --ckpt_path='path/to/pkl/file' --train=False --dataset='SM_MrHisum'
 python main.py --exp_num='exp2' --ckpt_path='path/to/pkl/file' --train=False --dataset='SM_VideoXum'
 ```
 After the completion of the inference stage, the performance of these models is shown on the terminal.
 
 ## Citation
 
-The S-MrHiSum and S-VideoXum datasets, as well as the SD-MVSum method for script-driven multimodal video summarization, were proposed in our paper: M. Mylonas, C. Zerva E. Apostolidis, V. Mezaris, "SD-MVSum: Script-Driven Multimodal Video Summarization Method and Datasets", Under review.
+The SM-MrHiSum and SM-VideoXum datasets, as well as the SD-MVSum method for script-driven multimodal video summarization, were proposed in our paper: M. Mylonas, C. Zerva E. Apostolidis, V. Mezaris, "SD-MVSum: Script-Driven Multimodal Video Summarization Method and Datasets", Under review.
 ```bibtex
 @misc{sdmvsum2026,
       title={"SD-MVSum: Script-Driven Multimodal Video Summarization Method and Datasets"}, 
