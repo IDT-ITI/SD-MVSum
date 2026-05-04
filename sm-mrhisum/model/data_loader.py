@@ -35,7 +35,7 @@ class VideoData(Dataset):
         # load data on demand
         with h5py.File(self.filename, 'r') as hdf:
             video_features = torch.from_numpy(hdf[video_name + '/video_embeddings'][()]).float()
-            text_features = torch.from_numpy(hdf[video_name + '/qwen_text_embeddings'][()]).float()
+            text_features = torch.from_numpy(hdf[video_name + '/script_embeddings'][()]).float()
             transcript_features = torch.from_numpy(hdf[video_name + '/aligned_transcripts'][()]).float()
             gtscore = torch.from_numpy(hdf[video_name + '/gtscores'][()]).float()
             gt_summary = torch.from_numpy(hdf[video_name + '/gt_summary'][()]).float()
