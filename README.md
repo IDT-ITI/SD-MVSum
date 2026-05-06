@@ -13,7 +13,7 @@ In our implementations and experiments, all the visual, textual, and transcript 
 
 ### Released data for each Dataset
 
-For each dataset we have released: a) an HDF5 file with various video metadata and the extracted embeddings from visual and textual data, along with a JSON file containing information about the train, validation and test splits, b) the generated textual annotations (scripts and transcripts), and c) a pretrained model of the SD-MVSum method. All these data are publicly available on [Zenodo](https://zenodo.org/records/17294445) and have been structured as follows:
+For each dataset we have released: a) an HDF5 file with various video metadata and the extracted embeddings from visual and textual data, along with a JSON file containing information about the train, validation and test splits, b) the generated textual annotations (scripts and transcripts), and c) a pretrained model of the SD-MVSum method. All these data are publicly available on [Zenodo](https://zenodo.org/records/19919955) and have been structured as follows:
 
 ```
 ├── SM-MrHiSum-Training-Data/
@@ -98,7 +98,7 @@ Create and activate the Conda environment
 ### Dataset preparation
 
 Download the datasets
-   - Download the .h5 files and the split.json files from [Zenodo](https://zenodo.org/records/17294445).
+   - Download the .h5 files and the split.json files from [Zenodo](https://zenodo.org/records/19919955).
    - Place these files under the ```dataset``` directories as shown below.
       ```
       SD-MVSum
@@ -121,7 +121,7 @@ python main.py --exp_num='exp1' --epochs=50 --batch_size=4 --train=True --datase
 After each training epoch, the trained model is evaluated on the samples of the validation set. When training is completed, the best-performing model on the validation set is selected and evaluated on the test set. Moreover, its checkpoint is saved as a .pkl file (see the generated folder "best_f1score_model").
 
 #### Inference using pretrained models
-Download the pretrained SD-MVSum models (.pkl files) on SM-MrHiSum and SM-VideoXum from [Zenodo](https://zenodo.org/records/17294445).
+Download the pretrained SD-MVSum models (.pkl files) on SM-MrHiSum and SM-VideoXum from [Zenodo](https://zenodo.org/records/19919955).
 To use them at inference mode on the SM-MrHiSum and SM-VideoXum datasets, please run the following commmands:
 
 ```
