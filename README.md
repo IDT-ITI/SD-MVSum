@@ -29,7 +29,7 @@ For each dataset we have released: a) an HDF5 file with various video metadata a
 ```
 
 ---
-### 1 <Dataset-Name>-Training-Data
+### 1 'Dataset-Name'-Training-Data
 This folder contains the HDF5 file for each dataset, along with the corresponding JSON file that contains information about the train, validation, and test splits.
 
 #### 1.1 `sm_mrhisum.h5`
@@ -66,7 +66,7 @@ JSON files with the video names in the train, validation, and test set of each d
        `sm_mrhisum_split.json`
        `sm_videoxum_split.json`
     
-### 2. <Dataset-Name>-Text-Annotations
+### 2. 'Dataset-Name'-Text-Annotations
 
 This folder contains all the generated textual data for creating the SM-MrHiSum and SM-VideoXum datasets; namely the generated scripts and the obtained time-stamped audio transcripts. The scripts were generated after describing the visual content of each ground-truth video summary using Qwen3-VL-8B-Instruct and prompting it to "describe the scenery and the main persons and activities shown in the video". The audio transcripts were obtained using the Silero model for voice activity detection and the Whisper model for speech recognition and transcript extraction.
 
@@ -76,7 +76,7 @@ This sub-folder includes the generated scripts for the ground-truth summary vide
 #### 2.2 `Transcripts/`
 This sub-folder includes the obtained time-stamped audio transcripts for the subset of full-length videos that contain spoken content.
 
-### 3. <Dataset-Name>-Trained-Model
+### 3. 'Dataset-Name'-Trained-Model
 This folder contains a pretrained model (in the form of a pickle file) of the SD-MVSum method for script-driven multimodal video summarization, on the dataset. This model has been selected based on the recorded performance (in terms of F-Score) on the validation set of the dataset.
 
 ## B. SD-MVSum method
